@@ -1,0 +1,8 @@
+version: "3.9"
+services:
+  iagentebot:
+    image: jgf78/iagentebot:latest
+    container_name: iagentebot
+    ports:
+      - "8083:8081"
+    restart: unless-stopped

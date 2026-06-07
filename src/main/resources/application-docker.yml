@@ -1,0 +1,3 @@
+iagente:
+   api:
+     url: http://iagente:8080/agent/chat   

@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: IAgentebot
+
+server:
+  port: 8085
+
+telegram:
+  bot:
+   username: BottyEnlacesBot
+   token: 2065671113:AAG5jza-4rHVc0zVtjbUOyOJ3YH8vGRLLYk
+   enabled: true
+
+iagente:
+   api:
+     url: http://jgf78japan.duckdns.org:8082/agent/chat    
