@@ -7,10 +7,10 @@ server:
 
 telegram:
   bot:
-   username: BottyEnlacesBot
-   token: 2065671113:AAG5jza-4rHVc0zVtjbUOyOJ3YH8vGRLLYk
+   username: ${TELEGRAM_BOT_USERNAME}
+   token: ${TELEGRAM_BOT_TOKEN}
    enabled: true
 
 iagente:
    api:
-     url: http://jgf78japan.duckdns.org:8082/agent/chat    
+     url: ${IAGENTE_API_URL}    
