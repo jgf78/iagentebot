@@ -1,10 +1,13 @@
 package com.julian.iagentebot.bot;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.longpolling.interfaces.LongPollingUpdateConsumer;
 import org.telegram.telegrambots.longpolling.starter.SpringLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.send.SendChatAction;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
@@ -49,12 +52,28 @@ public class IAgenteTelegramBot implements SpringLongPollingBot {
             String userId = update.getMessage().getFrom().getId().toString();
             String text = update.getMessage().getText();
 
+            AtomicBoolean typing =
+                    new AtomicBoolean(true);
+
+            startTyping(chatId, typing);
+
             String response;
 
             try {
-                response = iaAgenteClient.chat(userId, text);
+
+                response =
+                        iaAgenteClient.chat(
+                                userId,
+                                text);
+
             } catch (Exception e) {
-                response = "Ha ocurrido un error procesando tu mensaje.";
+
+                response =
+                        "Ha ocurrido un error procesando tu mensaje.";
+
+            } finally {
+
+                typing.set(false);
             }
 
             try {
@@ -66,5 +85,31 @@ public class IAgenteTelegramBot implements SpringLongPollingBot {
                 );
             } catch (Exception ignored) {}
         }
+    }
+    
+    private CompletableFuture<Void> startTyping(
+            Long chatId,
+            AtomicBoolean running) {
+
+        return CompletableFuture.runAsync(() -> {
+
+            while (running.get()) {
+
+                try {
+
+                    telegramClient.execute(
+                            SendChatAction.builder()
+                                    .chatId(chatId.toString())
+                                    .action("typing")
+                                    .build()
+                    );
+
+                    Thread.sleep(4000);
+
+                } catch (Exception e) {
+                    break;
+                }
+            }
+        });
     }
 }
